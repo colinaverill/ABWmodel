@@ -2,7 +2,7 @@
 
 #initial parameter values, based on spinup in Supplementary Table 2
 #time
-endTime<- 24000000 #end model run after this many model hours. 
+endTime<- 240000 #end model run after this many model hours. 
 interval<- 240000 #this results in 100 time steps. 
 temp<-20 #temperature, degrees C.
 t<-0 #start at time 0
@@ -36,20 +36,15 @@ Ea<- 47 #kj/mol Activation energy for SOC degrading enzymes
 Ea.uptake<- 47 #kj/mol Activation energy for uptake transporters 
 gas.const <- 0.008314 #the universal gas constant, bro. 
 
-#create empty vectors to record model outputs
-output.t<- c()
-output.MIC<- c()
-output.SOC<- c()
-output.CO2<- c()
+#calculating temperature sensitive parameters
+Vmax.uptake<- Vmax.uptake.0 * exp(-Ea.uptake/(gas.const * (temp + 273)))
+Km.uptake<- Km.uptake.slope*temp + Km.uptake.0
+CUE<- CUE.slope*temp + CUE.0
+Vmax<- Vmax.0 * exp(-Ea/(gas.const*(temp+273)))
+Km<- Km.slope*temp + Km.0
 
-while(t<endTime){
-  #calculating temperature sensitive parameters
-  Vmax.uptake<- Vmax.uptake.0 * exp(-Ea.uptake/(gas.const * (temp + 273)))
-  Km.uptake<- Km.uptake.slope*temp + Km.uptake.0
-  CUE<- CUE.slope*temp + CUE.0
-  Vmax<- Vmax.0 * exp(-Ea/(gas.const*(temp+273)))
-  Km<- Km.slope*temp + Km.0
-  
+
+for(i in 1:endTime){
   #fluxes!
   ASSIM = Vmax.uptake * MIC * (DOC / ( Km.uptake + DOC)) #microbial uptake
   DEATH = r.death * MIC #microbial death
@@ -74,14 +69,7 @@ while(t<endTime){
   SOC<- SOC + dSOCdt
   DOC<- DOC + dDOCdt
   
-  #advance time step
-  t=t+interval
-  
-  #save model outputs every timestep
-  output.t<- c(output.t,t)
-  output.MIC<- c(output.MIC,MIC)
-  output.SOC<- c(output.SOC,SOC)
-  output.CO2<- c(output.CO2,CO2)
+#end model function
 }
 
 #problems- SOC increases forever, even if you run the model forever. MBC saturates out. 
