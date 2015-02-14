@@ -1,10 +1,10 @@
-#Coding the ABW decomposition model. Allison SD, Bradford MA, Wallenstein MD. 2010. Nature Geoscience.Soil-carbon response to warming dependent on microbial physiology. 3: 336-340.
+#Coding the ABW decomposition model. Allison SD, Bradford MA & Wallenstein MD. 2010. Nature Geoscience. Soil-carbon response to warming dependent on microbial physiology. 3: 336-340.
 
 #initial parameter values, based on spinup in Supplementary Table 2
 #time
 endTime<- 2400000000 #end model run after this many model hours. 
 interval<- 240000 #this results in 100 time steps. 
-temp<-20
+temp<-20 #temperature, degrees C.
 t<-0 #start at time 0
 
 #initial pool sizes
@@ -18,7 +18,7 @@ inputSOC<- 0.0005 #mg/cm3/h
 inputDOC<- 0.0005 #mg/cm3/h
 
 #constant turnover rates and parameters
-r.death<- 0.0002 # biomass turnoevr rate 1/h
+r.death<- 0.0002 # biomass turnoevr rate (1/h)
 r.enz.prod<-0.000005 #fraction allocated to enzyme production (1/h)
 r.enz.loss<-0.001 #fraction enzyme pool that turns over per hour (1/h)
 MICtoSOC<- 0.5 #fraction of microbial turnover that enters SOC pool, rather than DOC
@@ -28,13 +28,13 @@ CUE.0<- 0.63 #intercept CUE
 CUE.slope<- -0.016 #change in CUE per degree temperature
 Vmax.0<- 100000000 #intercept Vmax term. mg SOM / cm3 / h
 Vmax.uptake.0 <- 100000000 #intercept uptake Vmax term
-Km.0 <- 500 #intercept Km value
-Km.uptake.0 <- 0.1 #Intercept Km of uptake value
-Km.slope<- 5
-Km.uptake.slope <- 0.01
-Ea<- 47 #kj/mol
-Ea.uptake<- 47
-gas.const <- 0.008314
+Km.0 <- 500 #intercept of temperature sensitive Km value
+Km.uptake.0 <- 0.1 #Intercept of temperature sensitive Km.uptake
+Km.slope<- 5 #change in Km value per degree C
+Km.uptake.slope <- 0.01 #change in Km.uptake parameter per degree C
+Ea<- 47 #kj/mol Activation energy for SOC degrading enzymes
+Ea.uptake<- 47 #kj/mol Activation energy for uptake transporters 
+gas.const <- 0.008314 #the gas constant bro. 
 
 #create empty vectors to record model outputs
 output.t<- c()
