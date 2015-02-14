@@ -1,17 +1,17 @@
 #Coding the ABW decomposition model. Allison SD, Bradford MA, Wallenstein MD. 2010. Nature Geoscience.Soil-carbon response to warming dependent on microbial physiology. 3: 336-340.
 
-#initial parameter values.
+#initial parameter values, based on spinup in Supplementary Table 2
 #time
-endTime<- 26280000 #end model run after this many model hours. 
-interval<- 5000
+endTime<- 2400000000 #end model run after this many model hours. 
+interval<- 240000 #this results in 100 time steps. 
 temp<-20
 t<-0 #start at time 0
 
 #initial pool sizes
-SOC<- 111.8765 #mg/cm3
-DOC<- 0.00144928 #mg/cm3
-MIC<- 2.19159 #mg/cm3
-Enz<- 0.0109579 #mg/cm3
+SOC<- 100 #mg/cm3
+DOC<- 0.5 #mg/cm3
+MIC<- 0.5 #mg/cm3
+Enz<- 0.01 #mg/cm3
 
 #inputfluxes
 inputSOC<- 0.0005 #mg/cm3/h
@@ -84,4 +84,4 @@ while(t<endTime){
   output.CO2<- c(output.CO2,CO2)
 }
 
-#problems- getting negative CO2 fluxes. SOC pool increases linearly with time. Biomass oscillates, but thats to be expected.
+#problems- SOC increases forever, even if you run the model forever. MBC saturates out. 
