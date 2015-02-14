@@ -54,7 +54,7 @@ for(i in 1:time){
   DECOMP = Vmax * Enz * (SOC / (Km + SOC))
   #DECOMP flux not alowed to be greater than total SOC pool size
   DECOMP<- ifelse(DECOMP>SOC,SOC,DECOMP)
-
+  
   #changes in pools per unit time!
   dMICdt<- ASSIM*CUE - DEATH - EPROD #change in microbial biomass per unit time
   dEnzdt<- EPROD-ELOSS #change in enzyme pool size per unit time
@@ -72,7 +72,7 @@ for(i in 1:time){
   
   #update output matrix
   out[i,]<-c(i,SOC,DOC,MIC,Enz,CO2)
-#end model function
+  #end model function
 }
 out<-data.frame(out)
 
