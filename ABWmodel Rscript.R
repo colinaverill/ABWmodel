@@ -49,7 +49,7 @@ for(i in 1:time){
   #fluxes!
   ASSIM = Vmax.uptake * MIC * (DOC / ( Km.uptake + DOC)) #microbial uptake
   DEATH = r.death * MIC #microbial death
-  EPROD = r.enz.prod*Enz #microbial enzyme production
+  EPROD = r.enz.prod*MIC #microbial enzyme production
   ELOSS = r.enz.loss*Enz #microbial enzyme turnover
   DECOMP = Vmax*Enz*(SOC/(Km + SOC))
   #DECOMP flux not alowed to be greater than total SOC pool size
@@ -75,6 +75,6 @@ for(i in 1:time){
   
 #end model function
 }
-
+out<-data.frame(out)
 #problems- SOC increases forever, even if you run the model forever. MBC saturates out. 
 
