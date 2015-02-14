@@ -43,23 +43,23 @@ Vmax<- Vmax.0 * exp(-Ea/(gas.const*(temp+273)))
 Km<- Km.slope*temp + Km.0
 
 #create output matrix for saving outputs
-out<-matrix(rep(0,time*6),nrow=time,dimnames=list(NULL,c('hours','SOC','DOC','mbc','enzC','CO2')))
+out<-matrix(rep(0,time*6),nrow=time,dimnames=list(NULL,c('hours','SOC','DOC','mbc','Enz','CO2')))
 
 for(i in 1:time){
   #fluxes!
   ASSIM = Vmax.uptake * MIC * (DOC / ( Km.uptake + DOC)) #microbial uptake
   DEATH = r.death * MIC #microbial death
-  EPROD = r.enz.prod*Enz #microbial enzyme production
-  ELOSS = r.enz.loss*Enz #microbial enzyme turnover
-  DECOMP = Vmax*Enz*(SOC/(Km + SOC))
+  EPROD = r.enz.prod * MIC #microbial enzyme production
+  ELOSS = r.enz.loss * Enz #microbial enzyme turnover
+  DECOMP = Vmax * Enz * (SOC / (Km + SOC))
   #DECOMP flux not alowed to be greater than total SOC pool size
   DECOMP<- ifelse(DECOMP>SOC,SOC,DECOMP)
 
   #changes in pools per unit time!
   dMICdt<- ASSIM*CUE - DEATH - EPROD #change in microbial biomass per unit time
   dEnzdt<- EPROD-ELOSS #change in enzyme pool size per unit time
-  dSOCdt<- inputSOC + DEATH*MICtoSOC - DECOMP
-  dDOCdt<- inputDOC + DEATH*(1-MICtoSOC) + DECOMP + ELOSS - ASSIM
+  dSOCdt<- inputSOC + DEATH*MICtoSOC - DECOMP #change in SOC pool per unit time
+  dDOCdt<- inputDOC + DEATH*(1-MICtoSOC) + DECOMP + ELOSS - ASSIM #change in DOC pool per unit time.
   
   #CO2 respiration
   CO2<- ASSIM*(1-CUE)
@@ -72,9 +72,9 @@ for(i in 1:time){
   
   #update output matrix
   out[i,]<-c(i,SOC,DOC,MIC,Enz,CO2)
-  
 #end model function
 }
+out<-data.frame(out)
 
-#problems- SOC increases forever, even if you run the model forever. MBC saturates out. 
+plot(out$Enz)
 
