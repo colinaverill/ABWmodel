@@ -1,9 +1,8 @@
 #Coding the ABW decomposition model. Allison SD, Bradford MA & Wallenstein MD. 2010. Nature Geoscience. Soil-carbon response to warming dependent on microbial physiology. 3: 336-340.
 
 #initial parameter values, based on spinup in Supplementary Table 2
-#time
-endTime<- 240000 #end model run after this many model hours. 
-interval<- 240000 #this results in 100 time steps. 
+#time-note I am dropping the interval from original ABW
+time<- 200000 #end model run after this many model hours. 
 temp<-20 #temperature, degrees C.
 t<-0 #start at time 0
 
@@ -43,8 +42,10 @@ CUE<- CUE.slope*temp + CUE.0
 Vmax<- Vmax.0 * exp(-Ea/(gas.const*(temp+273)))
 Km<- Km.slope*temp + Km.0
 
+#create output matrix for saving outputs
+out<-matrix(rep(0,time*6),nrow=time,dimnames=list(NULL,c('hours','SOC','DOC','mbc','enzC','CO2')))
 
-for(i in 1:endTime){
+for(i in 1:time){
   #fluxes!
   ASSIM = Vmax.uptake * MIC * (DOC / ( Km.uptake + DOC)) #microbial uptake
   DEATH = r.death * MIC #microbial death
@@ -68,6 +69,9 @@ for(i in 1:endTime){
   Enz<- Enz + dEnzdt
   SOC<- SOC + dSOCdt
   DOC<- DOC + dDOCdt
+  
+  #update output matrix
+  out[i,]<-c(i,SOC,DOC,MIC,Enz,CO2)
   
 #end model function
 }
